@@ -1,5 +1,5 @@
-#ifndef CLP_ARRAY_HPP
-#define CLP_ARRAY_HPP
+#ifndef YSTDLIB_ARRAY_HPP
+#define YSTDLIB_ARRAY_HPP
 
 #include <concepts>
 #include <cstddef>
@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-namespace clp {
+namespace ystdlib {
 /**
  * Class for a runtime fix-sized array.
  * @tparam T The type of elements in the array. The type must be default initializable so that this
@@ -97,7 +97,7 @@ private:
      */
     auto assert_is_in_range(size_t idx) -> void {
         if (idx >= m_size) {
-            throw std::out_of_range("clp::Array out-of-range access.");
+            throw std::out_of_range("ystdlib::Array out-of-range access.");
         }
     }
 
@@ -106,6 +106,6 @@ private:
     std::unique_ptr<T[]> m_data;
     size_t m_size;
 };
-}  // namespace clp
+}  // namespace ystdlib
 
-#endif  // CLP_ARRAY_HPP
+#endif  // YSTDLIB_ARRAY_HPP
