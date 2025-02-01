@@ -26,5 +26,10 @@ add_subdirectory(src/ystdlib)
 # Test dummy project
 add_executable(dummy)
 target_sources(dummy PRIVATE src/ystdlib/hello.cpp)
-target_link_libraries(dummy PRIVATE ystdlib::hello)
+target_link_libraries(
+    dummy
+    PRIVATE
+        ystdlib::hello
+        ystdlib::array
+)
 target_compile_features(dummy PRIVATE cxx_std_20)
