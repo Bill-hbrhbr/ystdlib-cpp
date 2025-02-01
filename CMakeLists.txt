@@ -12,10 +12,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
 )
 
 # Configure include paths for building ystdlib-cpp.
-list(APPEND YSTDLIB_CPP_BUILD_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/src)
+list(APPEND YSTDLIB_CPP_BUILD_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/src)
 
 # Configure include paths for projects using ystdlib-cpp.
-list(APPEND YSTDLIB_CPP_INSTALL_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/src)
+list(APPEND YSTDLIB_CPP_INSTALL_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/src)
 
 # Import CMake helper functions
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
