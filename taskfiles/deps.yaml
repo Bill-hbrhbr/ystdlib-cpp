@@ -3,17 +3,24 @@ version: "3"
 vars:
   G_CATCH2_LIB_NAME: "Catch2"
   G_CATCH2_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_CATCH2_LIB_NAME}}"
+  G_ABSL_LIB_NAME: "absl"
+  G_ABSL_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_ABSL_LIB_NAME}}"
 
 tasks:
   install-all:
     desc: "Install all dependencies required by ystdlib-cpp."
     deps:
       - "install-Catch2"
+      - "install-absl"
     cmds:
       - "rm -f '{{.G_DEPS_CMAKE_SETTINGS_FILE}}'"
       - >-
         echo "set(
         {{.G_CATCH2_LIB_NAME}}_ROOT \"{{.G_CATCH2_WORK_DIR}}/{{.G_CATCH2_LIB_NAME}}-install\"
+        )" >> "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
+      - >-
+        echo "set(
+        {{.G_ABSL_LIB_NAME}}_ROOT \"{{.G_ABSL_WORK_DIR}}/{{.G_ABSL_LIB_NAME}}-install\"
         )" >> "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
 
   install-Catch2:
@@ -26,3 +33,14 @@ tasks:
           WORK_DIR: "{{.G_CATCH2_WORK_DIR}}"
           FILE_SHA256: "1ab2de20460d4641553addfdfe6acd4109d871d5531f8f519a52ea4926303087"
           URL: "https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.0.tar.gz"
+
+  install-absl:
+    internal: true
+    run: "once"
+    cmds:
+      - task: ":utils:cmake-install-remote-tar"
+        vars:
+          NAME: "{{.G_ABSL_LIB_NAME}}"
+          WORK_DIR: "{{.G_ABSL_WORK_DIR}}"
+          FILE_SHA256: "16242f394245627e508ec6bb296b433c90f8d914f73b9c026fddb905e27276e8"
+          URL: "https://github.com/abseil/abseil-cpp/archive/refs/tags/20250127.0.tar.gz"
