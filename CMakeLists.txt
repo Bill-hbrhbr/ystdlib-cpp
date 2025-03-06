@@ -25,6 +25,9 @@ if("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "${YSTDLIB_CPP_CMAKE_CXX_COMPILE
     )
 endif()
 
+message(STATUS "CMAKE_AR: ${CMAKE_AR}")
+message(STATUS "CMAKE_RANLIB: ${CMAKE_RANLIB}")
+
 # Enable exporting compile commands
 set(CMAKE_EXPORT_COMPILE_COMMANDS
     ON
