@@ -42,8 +42,19 @@ if(YSTDLIB_CPP_IS_TOP_LEVEL)
     # installed, this file is not necessary.
     include(build/deps/settings.cmake OPTIONAL)
 
+    # Use ystdlib-cpp's own path since there's no parent project.
+    string(LENGTH "${CMAKE_CURRENT_LIST_DIR}/" YSTDLIB_CPP_PROJECT_SOURCE_PATH_SIZE)
+
     # If previously undefined, `BUILD_TESTING` will be set to ON.
     include(CTest)
+endif()
+
+if(DEFINED YSTDLIB_CPP_PROJECT_SOURCE_PATH_SIZE)
+    # Macro providing the length of the absolute source directory path of the project using
+    # ystdlib-cpp so we can output file name information with relative (rather than absolute) paths.
+    add_definitions(
+        "-DYSTDLIB_CPP_PROJECT_SOURCE_PATH_SIZE=${YSTDLIB_CPP_PROJECT_SOURCE_PATH_SIZE}"
+    )
 endif()
 
 if(BUILD_TESTING AND YSTDLIB_CPP_BUILD_TESTING)
@@ -52,6 +63,15 @@ endif()
 
 # Import CMake helper functions
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
+
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_LIBRARIES stacktrace)
+find_package(Boost 1.87 REQUIRED ${Boost_LIBRARIES})
+if(Boost_FOUND)
+    message(STATUS "Found Boost ${Boost_VERSION}")
+else()
+    message(FATAL_ERROR "Could not find ${Boost_LIBRARIES} libraries for Boost")
+endif()
 
 if(YSTDLIB_CPP_ENABLE_TESTS)
     find_package(Catch2 3.8.0 REQUIRED)

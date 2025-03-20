@@ -1,6 +1,8 @@
 version: "3"
 
 vars:
+  G_BOOST_LIB_NAME: "Boost"
+  G_BOOST_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_BOOST_LIB_NAME}}"
   G_CATCH2_LIB_NAME: "Catch2"
   G_CATCH2_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_CATCH2_LIB_NAME}}"
 
@@ -8,13 +10,46 @@ tasks:
   install-all:
     desc: "Install all dependencies required by ystdlib-cpp."
     deps:
+      - "install-Boost"
       - "install-Catch2"
     cmds:
       - "rm -f '{{.G_DEPS_CMAKE_SETTINGS_FILE}}'"
       - >-
         echo "set(
+        {{.G_BOOST_LIB_NAME}}_ROOT \"{{.G_BOOST_WORK_DIR}}/{{.G_BOOST_LIB_NAME}}-install\"
+        )" >> "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
+      - >-
+        echo "set(
         {{.G_CATCH2_LIB_NAME}}_ROOT \"{{.G_CATCH2_WORK_DIR}}/{{.G_CATCH2_LIB_NAME}}-install\"
         )" >> "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
+
+  install-Boost:
+    internal: true
+    vars:
+      BOOST_SRC_DIR: "{{.G_DEPS_DIR}}/Boost/Boost-src"
+      BOOST_INSTALL_DIR: "{{.G_DEPS_DIR}}/Boost/Boost-install"
+    run: "once"
+    dir: "{{.BOOST_SRC_DIR}}"
+    cmds:
+      - task: ":utils:download-and-extract-tar"
+        vars:
+          OUTPUT_DIR: "{{.G_DEPS_DIR}}/Boost/Boost-src"
+          FILE_SHA256: "c3ee7c763212db96a65dd5392b7ac0f2970f8e5567b0dcc12d8dc53ff8dbb770"
+          URL: "https://github.com/boostorg/boost/archive/refs/tags/boost-1.87.0.tar.gz"
+      - task: ":utils:download-and-extract-tar"
+        vars:
+          OUTPUT_DIR: "{{.G_DEPS_DIR}}/Boost/Boost-src/tools/build"
+          FILE_SHA256: "827cf29078d41d6906e07f32715fccf1b4635f8995170e500b18b89a55fec10b"
+          URL: "https://github.com/boostorg/build/archive/refs/tags/boost-1.87.0.tar.gz"
+      - task: ":utils:download-and-extract-tar"
+        vars:
+          OUTPUT_DIR: "{{.G_DEPS_DIR}}/Boost/Boost-src/tools/cmake"
+          FILE_SHA256: "12d0b9145c0ee67d4448f8ed63288eb231188d16de1cacc740436b42d18ec1ca"
+          URL: "https://github.com/boostorg/cmake/archive/refs/tags/boost-1.87.0.tar.gz"
+      #- |-
+      #  ./bootstrap.sh --with-libraries=stacktrace
+      #  ./b2 -j{num_cpus}
+      #  ./b2 --prefix={{.BOOST_INSTALL_DIR}} install
 
   install-Catch2:
     internal: true
