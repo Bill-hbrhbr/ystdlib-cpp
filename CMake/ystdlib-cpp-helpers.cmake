@@ -27,6 +27,7 @@ endfunction()
 # @param PUBLIC_LINK_LIBRARIES
 # @param PRIVATE_LINK_LIBRARIES
 # @parms TESTS_SOURCES
+# @param TEST_LINK_LIBRARIES
 # @param [BUILD_INCLUDE_DIR="${PROJECT_SOURCE_DIR}/src"] The list of include paths for building the
 # library and for external projects that builds `ystdlib-cpp` as a CMAKE subproject via the
 # add_subdirectory() function.
@@ -42,6 +43,7 @@ function(cpp_library)
         PUBLIC_LINK_LIBRARIES
         PRIVATE_LINK_LIBRARIES
         TESTS_SOURCES
+        TEST_LINK_LIBRARIES
         BUILD_INCLUDE_DIR
     )
     cmake_parse_arguments(arg_cpp_lib "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -65,12 +67,20 @@ function(cpp_library)
 
     check_if_header_only(arg_cpp_lib_PRIVATE_SOURCES _IS_INTERFACE_LIB _)
     if(_IS_INTERFACE_LIB)
+        if(arg_cpp_lib_PRIVATE_LINK_LIBRARIES)
+            message(
+                FATAL_ERROR
+                "Private dependency specifications disabled for interface library target ${_ALIAS_TARGET_NAME}."
+            )
+        endif()
+
         add_library(${arg_cpp_lib_NAME} INTERFACE)
         target_include_directories(
             ${arg_cpp_lib_NAME}
             INTERFACE
                 "$<BUILD_INTERFACE:${arg_cpp_lib_BUILD_INCLUDE_DIR}>"
         )
+        target_link_libraries(${arg_cpp_lib_NAME} INTERFACE ${arg_cpp_lib_PUBLIC_LINK_LIBRARIES})
         target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
     else()
         # The library type is specified by `BUILD_SHARED_LIBS` if it is defined. Otherwise, the type
@@ -87,16 +97,16 @@ function(cpp_library)
             PUBLIC
                 "$<BUILD_INTERFACE:${arg_cpp_lib_BUILD_INCLUDE_DIR}>"
         )
+        target_link_libraries(
+            ${arg_cpp_lib_NAME}
+            PUBLIC
+                ${arg_cpp_lib_PUBLIC_LINK_LIBRARIES}
+            PRIVATE
+                ${arg_cpp_lib_PRIVATE_LINK_LIBRARIES}
+        )
         target_compile_features(${arg_cpp_lib_NAME} PUBLIC cxx_std_20)
     endif()
 
-    target_link_libraries(
-        ${arg_cpp_lib_NAME}
-        PUBLIC
-            ${arg_cpp_lib_PUBLIC_LINK_LIBRARIES}
-        PRIVATE
-            ${arg_cpp_lib_PRIVATE_LINK_LIBRARIES}
-    )
     add_library(${_ALIAS_TARGET_NAME} ALIAS ${arg_cpp_lib_NAME})
 
     if(YSTDLIB_CPP_ENABLE_TESTS)
@@ -109,6 +119,7 @@ function(cpp_library)
             PRIVATE
                 Catch2::Catch2WithMain
                 ${_ALIAS_TARGET_NAME}
+                ${arg_cpp_lib_TEST_LINK_LIBRARIES}
         )
         target_compile_features(${_UNIT_TEST_TARGET} PRIVATE cxx_std_20)
         set_property(
@@ -121,6 +132,11 @@ function(cpp_library)
 
         # Link against unified unit test
         target_sources(${UNIFIED_UNIT_TEST_TARGET} PRIVATE ${arg_cpp_lib_TESTS_SOURCES})
-        target_link_libraries(${UNIFIED_UNIT_TEST_TARGET} PRIVATE ${_ALIAS_TARGET_NAME})
+        target_link_libraries(
+            ${UNIFIED_UNIT_TEST_TARGET}
+            PRIVATE
+                ${_ALIAS_TARGET_NAME}
+                ${arg_cpp_lib_TEST_LINK_LIBRARIES}
+        )
     endif()
 endfunction()
