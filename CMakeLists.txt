@@ -10,11 +10,12 @@ include(ystdlib-helpers)
 option(BUILD_SHARED_LIBS "Build using shared libraries." OFF)
 option(ystdlib_BUILD_TESTING "Build the testing tree for ystdlib." ON)
 
-# Require compiler versions that support the C++20 features necessary for compiling ystdlib
+# Require compiler versions that support the C++17 features necessary for compiling ystdlib
+# See also: https://en.cppreference.com/w/cpp/compiler_support/17
 if("AppleClang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
-    set(ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION "16")
+    set(ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION "15")
 elseif("Clang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
-    set(ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION "16")
+    set(ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION "15")
 elseif("GNU" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
     set(ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION "11")
 else()
@@ -74,7 +75,7 @@ if(ystdlib_ENABLE_TESTS)
     set(UNIFIED_UNIT_TEST_TARGET "unit-test-all")
     add_executable(${UNIFIED_UNIT_TEST_TARGET})
     target_link_libraries(${UNIFIED_UNIT_TEST_TARGET} PRIVATE Catch2::Catch2WithMain)
-    target_compile_features(${UNIFIED_UNIT_TEST_TARGET} PRIVATE cxx_std_20)
+    target_compile_features(${UNIFIED_UNIT_TEST_TARGET} PRIVATE cxx_std_17)
     set_property(
         TARGET
             ${UNIFIED_UNIT_TEST_TARGET}

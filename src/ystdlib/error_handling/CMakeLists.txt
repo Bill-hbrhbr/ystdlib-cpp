@@ -16,7 +16,6 @@ add_cpp_library(
     NAMESPACE ystdlib
     PUBLIC_HEADERS
         ErrorCode.hpp
-        TraceableException.hpp
         Result.hpp
         utils.hpp
     PUBLIC_LINK_LIBRARIES
@@ -30,7 +29,6 @@ if(ystdlib_ENABLE_TESTS)
         SOURCES
             test/test_ErrorCode.cpp
             test/test_Result.cpp
-            test/test_TraceableException.cpp
             test/types.cpp
         UNIFIED_TEST_TARGET "${UNIFIED_UNIT_TEST_TARGET}"
     )

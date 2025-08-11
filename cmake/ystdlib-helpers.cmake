@@ -31,7 +31,7 @@ function(check_if_header_only SOURCE_LIST IS_HEADER_ONLY NON_HEADER_FILE)
     set(${NON_HEADER_FILE} "" PARENT_SCOPE)
 endfunction()
 
-# Adds a C++20 library in the subdirectory NAME with the target NAME and alias NAMESPACE::NAME.
+# Adds a C++17 library in the subdirectory NAME with the target NAME and alias NAMESPACE::NAME.
 # Libraries with multiple levels of namespace nesting are currently not supported.
 #
 # @param {string} NAME
@@ -87,7 +87,7 @@ function(add_cpp_library)
         add_library(${ARG_NAME} INTERFACE)
         target_link_libraries(${ARG_NAME} INTERFACE ${ARG_PUBLIC_LINK_LIBRARIES})
 
-        target_compile_features(${ARG_NAME} INTERFACE cxx_std_20)
+        target_compile_features(${ARG_NAME} INTERFACE cxx_std_17)
     else()
         add_library(${ARG_NAME})
         target_sources(${ARG_NAME} PRIVATE ${ARG_PRIVATE_SOURCES})
@@ -98,7 +98,7 @@ function(add_cpp_library)
             PRIVATE
                 ${ARG_PRIVATE_LINK_LIBRARIES}
         )
-        target_compile_features(${ARG_NAME} PUBLIC cxx_std_20)
+        target_compile_features(${ARG_NAME} PUBLIC cxx_std_17)
     endif()
 
     add_library(${ALIAS_TARGET_NAME} ALIAS ${ARG_NAME})
@@ -114,7 +114,7 @@ function(add_cpp_library)
     )
 endfunction()
 
-# Adds a C++ 20 test executable named `unit-test-NAME` that will be built with `SOURCES` and linked
+# Adds a C++ 17 test executable named `unit-test-NAME` that will be built with `SOURCES` and linked
 # with `LINK_LIBRARIES`, in addition to Catch2.
 #
 # @param {string} NAME
@@ -153,7 +153,7 @@ function(add_catch2_tests)
             ${ARG_LINK_LIBRARIES}
             Catch2::Catch2WithMain
     )
-    target_compile_features(${UNIT_TEST_TARGET} PRIVATE cxx_std_20)
+    target_compile_features(${UNIT_TEST_TARGET} PRIVATE cxx_std_17)
     set_property(
         TARGET
             ${UNIT_TEST_TARGET}
