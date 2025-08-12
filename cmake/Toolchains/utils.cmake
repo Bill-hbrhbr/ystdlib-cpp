@@ -43,7 +43,7 @@ function(validate_compiler_versions)
         message(
             FATAL_ERROR
             "${CMAKE_CXX_COMPILER_ID} version ${CMAKE_CXX_COMPILER_VERSION} is too low. Must be at \
-			least ${CXX_COMPILER_MIN_VERSION}."
+            least ${CXX_COMPILER_MIN_VERSION}."
         )
     endif()
 endfunction()

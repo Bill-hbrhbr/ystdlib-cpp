@@ -1,3 +1,15 @@
+# Used for CMake toolchain setup. Sets `VAR_NAME` to `BINARY_PATH` after verifying the toolchain
+# binary exists. Stops configuration if the required binary is missing.
+#
+# @param {string} VAR_NAME Variable name to set.
+# @param {string} BINARY_PATH Path to the cmake toolchain binary.
+function(set_toolchian_binary_var VAR_NAME BINARY_PATH)
+    if(NOT EXISTS "${BINARY_PATH}")
+        message(FATAL_ERROR "Required cmake toolchain binary not found: ${BINARY_PATH}")
+    endif()
+    set(${VAR_NAME} "${BINARY_PATH}" PARENT_SCOPE)
+endfunction()
+
 message(STATUS "Setting up LLVM v15 toolchain...")
 
 execute_process(
@@ -15,7 +27,7 @@ if(NOT 0 EQUAL BREW_RESULT)
     )
 endif()
 
-set(CMAKE_C_COMPILER "${LLVM_TOOLCHAIN_PREFIX}/bin/clang")
-set(CMAKE_CXX_COMPILER "${LLVM_TOOLCHAIN_PREFIX}/bin/clang++")
-set(CMAKE_AR "${LLVM_TOOLCHAIN_PREFIX}/bin/llvm-ar")
-set(CMAKE_RANLIB "${LLVM_TOOLCHAIN_PREFIX}/bin/llvm-ranlib")
+set_toolchian_binary_var(CMAKE_C_COMPILER   "${LLVM_TOOLCHAIN_PREFIX}/bin/clang")
+set_toolchian_binary_var(CMAKE_CXX_COMPILER "${LLVM_TOOLCHAIN_PREFIX}/bin/clang++")
+set_toolchian_binary_var(CMAKE_AR           "${LLVM_TOOLCHAIN_PREFIX}/bin/llvm-ar")
+set_toolchian_binary_var(CMAKE_RANLIB       "${LLVM_TOOLCHAIN_PREFIX}/bin/llvm-ranlib")
