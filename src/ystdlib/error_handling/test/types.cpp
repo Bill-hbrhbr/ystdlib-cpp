@@ -61,7 +61,7 @@ auto BinaryErrorCategory::equivalent(
 ) const noexcept -> bool {
     switch (error_enum) {
         case BinaryErrorCodeEnum::Failure:
-            return std::ranges::any_of(
+            return std::any_of(
                     cFailureConditions.cbegin(),
                     cFailureConditions.cend(),
                     [&](auto failure_condition) -> bool { return condition == failure_condition; }
