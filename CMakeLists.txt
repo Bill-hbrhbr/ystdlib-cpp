@@ -75,7 +75,7 @@ if(ystdlib_ENABLE_TESTS)
     set(UNIFIED_UNIT_TEST_TARGET "unit-test-all")
     add_executable(${UNIFIED_UNIT_TEST_TARGET})
     target_link_libraries(${UNIFIED_UNIT_TEST_TARGET} PRIVATE Catch2::Catch2WithMain)
-    target_compile_features(${UNIFIED_UNIT_TEST_TARGET} PRIVATE cxx_std_17)
+    target_compile_features(${UNIFIED_UNIT_TEST_TARGET} PRIVATE cxx_std_20)
     set_property(
         TARGET
             ${UNIFIED_UNIT_TEST_TARGET}
