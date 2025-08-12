@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.23)
 
+# Toolchain setup must come before the first project() call in the entire CMake buildsystem.
+# If ystdlib is not the top-level project, the following setup has no effect.
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/Toolchains/utils.cmake")
+setup_toolchains()
+
 project(ystdlib VERSION "0.1.0" LANGUAGES CXX)
+
+validate_compiler_versions()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(CMakePackageConfigHelpers)
@@ -9,28 +16,6 @@ include(ystdlib-helpers)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries." OFF)
 option(ystdlib_BUILD_TESTING "Build the testing tree for ystdlib." ON)
-
-# Require compiler versions that support the C++17 features necessary for compiling ystdlib
-# See also: https://en.cppreference.com/w/cpp/compiler_support/17
-if("AppleClang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
-    set(ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION "15")
-elseif("Clang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
-    set(ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION "15")
-elseif("GNU" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
-    set(ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION "11")
-else()
-    message(
-        FATAL_ERROR
-        "Unsupported compiler: ${CMAKE_CXX_COMPILER_ID}. Please use AppleClang, Clang, or GNU."
-    )
-endif()
-if("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "${ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION}")
-    message(
-        FATAL_ERROR
-        "${CMAKE_CXX_COMPILER_ID} version ${CMAKE_CXX_COMPILER_VERSION} is too low. Must be at \
-        least ${ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION}."
-    )
-endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS
     ON
