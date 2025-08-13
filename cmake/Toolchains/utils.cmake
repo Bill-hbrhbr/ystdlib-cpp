@@ -14,7 +14,7 @@ function(setup_toolchains)
         if("${MACOS_VERSION}" VERSION_LESS "15")
             set(CMAKE_TOOLCHAIN_FILE
                 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Toolchains/llvm-clang-15-toolchain.cmake"
-                CACHE STRING
+                CACHE FILEPATH
                 "Toolchain file"
             )
         endif()
@@ -42,8 +42,8 @@ function(validate_compiler_versions)
     if("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "${CXX_COMPILER_MIN_VERSION}")
         message(
             FATAL_ERROR
-            "${CMAKE_CXX_COMPILER_ID} version ${CMAKE_CXX_COMPILER_VERSION} is too low. Must be at \
-            least ${CXX_COMPILER_MIN_VERSION}."
+            "${CMAKE_CXX_COMPILER_ID} version ${CMAKE_CXX_COMPILER_VERSION} is too low. Must be at"
+            " least ${CXX_COMPILER_MIN_VERSION}."
         )
     endif()
 endfunction()

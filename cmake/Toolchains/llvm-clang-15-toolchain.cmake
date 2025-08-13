@@ -3,7 +3,7 @@
 #
 # @param {string} VAR_NAME Variable name to set.
 # @param {string} BINARY_PATH Path to the cmake toolchain binary.
-function(set_toolchian_binary_var VAR_NAME BINARY_PATH)
+function(set_toolchain_binary_var VAR_NAME BINARY_PATH)
     if(NOT EXISTS "${BINARY_PATH}")
         message(FATAL_ERROR "Required cmake toolchain binary not found: ${BINARY_PATH}")
     endif()
@@ -22,12 +22,12 @@ execute_process(
 if(NOT 0 EQUAL BREW_RESULT)
     message(
         FATAL_ERROR
-        "Failed to locate LLVM v15 using Homebrew. Please ensure llvm@15 is installed: 'brew \
-        install llvm@15'"
+        "Failed to locate LLVM v15 using Homebrew. Please ensure llvm@15 is installed: 'brew"
+        " install llvm@15'"
     )
 endif()
 
-set_toolchian_binary_var(CMAKE_C_COMPILER   "${LLVM_TOOLCHAIN_PREFIX}/bin/clang")
-set_toolchian_binary_var(CMAKE_CXX_COMPILER "${LLVM_TOOLCHAIN_PREFIX}/bin/clang++")
-set_toolchian_binary_var(CMAKE_AR           "${LLVM_TOOLCHAIN_PREFIX}/bin/llvm-ar")
-set_toolchian_binary_var(CMAKE_RANLIB       "${LLVM_TOOLCHAIN_PREFIX}/bin/llvm-ranlib")
+set_toolchain_binary_var(CMAKE_C_COMPILER "${LLVM_TOOLCHAIN_PREFIX}/bin/clang")
+set_toolchain_binary_var(CMAKE_CXX_COMPILER "${LLVM_TOOLCHAIN_PREFIX}/bin/clang++")
+set_toolchain_binary_var(CMAKE_AR "${LLVM_TOOLCHAIN_PREFIX}/bin/llvm-ar")
+set_toolchain_binary_var(CMAKE_RANLIB "${LLVM_TOOLCHAIN_PREFIX}/bin/llvm-ranlib")
