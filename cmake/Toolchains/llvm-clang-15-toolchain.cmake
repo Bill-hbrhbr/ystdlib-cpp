@@ -2,10 +2,10 @@
 # binary exists. Stops configuration if the required binary is missing.
 #
 # @param {string} VAR_NAME Variable name to set.
-# @param {string} BINARY_PATH Path to the cmake toolchain binary.
+# @param {string} BINARY_PATH Path to the CMake toolchain binary.
 function(set_toolchain_binary_var VAR_NAME BINARY_PATH)
     if(NOT EXISTS "${BINARY_PATH}")
-        message(FATAL_ERROR "Required cmake toolchain binary not found: ${BINARY_PATH}")
+        message(FATAL_ERROR "Required CMake toolchain binary not found: ${BINARY_PATH}")
     endif()
     set(${VAR_NAME} "${BINARY_PATH}" PARENT_SCOPE)
 endfunction()
