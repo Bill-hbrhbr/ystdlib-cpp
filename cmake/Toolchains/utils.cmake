@@ -11,7 +11,7 @@ function(setup_toolchains)
             OUTPUT_VARIABLE MACOS_VERSION
             OUTPUT_STRIP_TRAILING_WHITESPACE
         )
-        if("${MACOS_VERSION}" VERSION_LESS "15")
+        if("${MACOS_VERSION}" VERSION_LESS "14")
             set(CMAKE_TOOLCHAIN_FILE
                 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Toolchains/llvm-clang-15-toolchain.cmake"
                 CACHE FILEPATH
