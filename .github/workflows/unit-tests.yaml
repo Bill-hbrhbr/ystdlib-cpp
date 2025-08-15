@@ -46,6 +46,7 @@ jobs:
         name: "Install macOS 14 deps: coreutils (for md5sum) and Apple Clang 16 (for C++20)"
         run: |-
           brew install coreutils
+          clang --version
           brew install llvm@16
 
       - name: "Run unit tests and examples"
