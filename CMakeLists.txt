@@ -1,18 +1,14 @@
 cmake_minimum_required(VERSION 3.23)
 
-# Toolchain setup must come before the first project() call in the entire CMake buildsystem.
-# If ystdlib is not the top-level project, the following setup has no effect.
-include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/Toolchains/utils.cmake")
-setup_toolchains()
-
 project(ystdlib VERSION "0.1.0" LANGUAGES CXX)
-
-validate_compiler_versions()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
+include(Toolchains/utils)
 include(ystdlib-helpers)
+
+validate_compiler_versions()
 
 option(BUILD_SHARED_LIBS "Build using shared libraries." OFF)
 option(ystdlib_BUILD_TESTING "Build the testing tree for ystdlib." ON)

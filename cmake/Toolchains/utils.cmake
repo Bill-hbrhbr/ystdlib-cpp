@@ -1,25 +1,5 @@
-# This file contains utility functions for setting up toolchains and validating toolchain versions
-# to ensure compatibility with the C++20 features required by the project.
-
-# Sets up the appropriate toolchain file based on the host system.
-function(setup_toolchains)
-    # For macOS versions below 15, use the LLVM 15 Clang toolchain.
-    if("Darwin" STREQUAL "${CMAKE_HOST_SYSTEM_NAME}")
-        execute_process(
-            COMMAND
-                "sw_vers" "--productVersion"
-            OUTPUT_VARIABLE MACOS_VERSION
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
-        if("${MACOS_VERSION}" VERSION_LESS "14")
-            set(CMAKE_TOOLCHAIN_FILE
-                "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Toolchains/llvm-clang-15-toolchain.cmake"
-                CACHE FILEPATH
-                "Toolchain file"
-            )
-        endif()
-    endif()
-endfunction()
+# This file contains utility functions for validating toolchain versions to ensure compatibility
+# with the C++20 features required by the project.
 
 # Checks if the compiler ID and version meet the minimum requirements to support C++20 features
 # required by the project:
