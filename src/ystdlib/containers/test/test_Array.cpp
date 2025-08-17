@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <concepts>
 #include <cstddef>
-#include <ranges>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -66,9 +65,12 @@ void test_list_initialization_in_function_call(
         ystdlib::containers::Array<PolymorphicConstructors> const& arr,
         std::vector<size_t> const& data
 ) {
-    REQUIRE(std::ranges::equal(
-            arr | std::views::transform([](auto const& obj) { return obj.get_value(); }),
-            data
+    REQUIRE(std::equal(
+            arr.begin(),
+            arr.end(),
+            data.begin(),
+            data.end(),
+            [](auto const& obj, size_t v) { return obj.get_value() == v; }
     ));
 }
 }  // namespace
@@ -88,7 +90,7 @@ TEST_CASE("test_array_reference", "[containers][Array]") {
         arr.at(idx) = idx;
     }
     auto const& arr_const_ref = arr;
-    REQUIRE(std::ranges::equal(arr, arr_const_ref));
+    REQUIRE(std::equal(arr.begin(), arr.end(), arr_const_ref.begin(), arr_const_ref.end()));
 }
 
 TEST_CASE("test_array_ranged_copy", "[containers][Array]") {
@@ -97,8 +99,8 @@ TEST_CASE("test_array_ranged_copy", "[containers][Array]") {
         vec.push_back(idx);
     }
     Array<size_t> arr(cBufferSize);
-    std::ranges::copy(vec, arr.begin());
-    REQUIRE(std::ranges::equal(vec, arr));
+    std::copy(vec.begin(), vec.end(), arr.begin());
+    REQUIRE(std::equal(vec.cbegin(), vec.cend(), arr.begin(), arr.end()));
 }
 
 TEST_CASE("test_array_movable", "[containers][Array]") {
@@ -109,7 +111,12 @@ TEST_CASE("test_array_movable", "[containers][Array]") {
         reference_array.at(idx) = idx;
     }
     auto const arr_moved{std::move(arr)};
-    REQUIRE(std::ranges::equal(reference_array, arr_moved));
+    REQUIRE(std::equal(
+            reference_array.begin(),
+            reference_array.end(),
+            arr_moved.begin(),
+            arr_moved.end()
+    ));
 }
 
 TEST_CASE("test_array_illegal_access", "[containers][Array]") {
@@ -143,8 +150,8 @@ TEMPLATE_TEST_CASE(
 ) {
     REQUIRE(std::is_fundamental_v<TestType>);
     Array<TestType> arr(cBufferSize);
-    std::ranges::for_each(arr, [](auto const& p) -> void {
-        REQUIRE((static_cast<TestType>(0) == p));
+    std::for_each(arr.begin(), arr.end(), [](auto const& p) {
+        REQUIRE(static_cast<TestType>(0) == p);
     });
 }
 
@@ -158,7 +165,7 @@ TEST_CASE("test_array_list_initialization", "[containers][Array]") {
             vec{"yscope", "clp", "ystdlib", "ystdlib::containers::Array", "default_initializable"};
     Array<std::string> const
             arr{"yscope", "clp", "ystdlib", "ystdlib::containers::Array", "default_initializable"};
-    REQUIRE(std::ranges::equal(vec, arr));
+    REQUIRE(std::equal(vec.cbegin(), vec.cend(), arr.begin(), arr.end()));
 
     // Test polymorphic list initialization
     REQUIRE(std::is_copy_constructible_v<PolymorphicConstructors>);
@@ -174,10 +181,12 @@ TEST_CASE("test_array_list_initialization", "[containers][Array]") {
                    cTestNum0,
                    std::string{cTestStr},
                    ExplicitConstructor{cTestNum1}};
-        REQUIRE(std::ranges::equal(
-                list_init_arr
-                        | std::views::transform([](auto const& obj) { return obj.get_value(); }),
-                data
+        REQUIRE(std::equal(
+                list_init_arr.begin(),
+                list_init_arr.end(),
+                data.cbegin(),
+                data.cend(),
+                [](auto const& obj, auto const& v) { return obj.get_value() == v; }
         ));
     }
 

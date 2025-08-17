@@ -114,7 +114,7 @@ function(add_cpp_library)
     )
 endfunction()
 
-# Adds a C++ 20 test executable named `unit-test-NAME` that will be built with `SOURCES` and linked
+# Adds a C++20 test executable named `unit-test-NAME` that will be built with `SOURCES` and linked
 # with `LINK_LIBRARIES`, in addition to Catch2.
 #
 # @param {string} NAME

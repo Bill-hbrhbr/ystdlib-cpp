@@ -43,21 +43,12 @@ jobs:
         run: "npm install -g @go-task/cli"
 
       - if: "'macos-14' == matrix.os"
-        name: "Install macOS 14 deps: coreutils (for md5sum) and Apple Clang 16 (for C++20)"
+        name: "Install coreutils (for md5sum)"
         run: |-
           brew install coreutils
-          brew install llvm@16
 
       - name: "Run unit tests and examples"
-        env: >-
-          ${{
-          'macos-14' == matrix.os
-          && fromJson('{
-          "CC": "/opt/homebrew/opt/llvm@16/bin/clang",
-          "CXX": "/opt/homebrew/opt/llvm@16/bin/clang++"
-          }')
-          || fromJson('{}')
-          }}
+
         # Currently unit tests rely on cassert and fail to compile in release mode.
         run: |-
           task test:run-debug

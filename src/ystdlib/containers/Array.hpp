@@ -37,7 +37,7 @@ public:
             // NOLINTNEXTLINE(*-avoid-c-arrays)
             : m_data{std::make_unique<T[]>(list.size())},
               m_size{list.size()} {
-        std::ranges::copy(list, m_data.get());
+        std::copy(list.begin(), list.end(), m_data.get());
     }
 
     // Disable copy constructor and assignment operator

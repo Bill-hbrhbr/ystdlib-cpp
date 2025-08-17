@@ -5,31 +5,13 @@ project(ystdlib VERSION "0.1.0" LANGUAGES CXX)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
+include(Toolchains/utils)
 include(ystdlib-helpers)
+
+validate_compiler_versions()
 
 option(BUILD_SHARED_LIBS "Build using shared libraries." OFF)
 option(ystdlib_BUILD_TESTING "Build the testing tree for ystdlib." ON)
-
-# Require compiler versions that support the C++20 features necessary for compiling ystdlib
-if("AppleClang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
-    set(ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION "16")
-elseif("Clang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
-    set(ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION "16")
-elseif("GNU" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
-    set(ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION "11")
-else()
-    message(
-        FATAL_ERROR
-        "Unsupported compiler: ${CMAKE_CXX_COMPILER_ID}. Please use AppleClang, Clang, or GNU."
-    )
-endif()
-if("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "${ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION}")
-    message(
-        FATAL_ERROR
-        "${CMAKE_CXX_COMPILER_ID} version ${CMAKE_CXX_COMPILER_VERSION} is too low. Must be at \
-        least ${ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION}."
-    )
-endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS
     ON
